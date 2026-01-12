@@ -1,0 +1,39 @@
+GPX Elevation Profile Analyzer - Project Structure
+===================================================
+
+gpx-analyzer/
+├── src/
+│   └── com/
+│       └── github/
+│           └── ledlogic/
+│               └── gpxanalyzer/
+│                   ├── TrackPoint.java              (Data model)
+│                   ├── GPXElevationProfile.java     (Parser & processor)
+│                   ├── ElevationPlotter.java        (GUI visualization)
+│                   └── ElevationProfileApp.java     (Main application)
+├── bin/                                             (Created after compilation)
+│   └── com/
+│       └── github/
+│           └── ledlogic/
+│               └── gpxanalyzer/
+│                   └── *.class                      (Compiled classes)
+├── sample_track.gpx                                 (Test data)
+├── compile.sh                                       (Build script)
+├── run.sh                                           (Execution script)
+├── README.md                                        (Documentation)
+└── LICENSE                                          (MIT License)
+
+Package: com.github.ledlogic.gpxanalyzer
+
+Main Classes:
+  - TrackPoint: Represents a GPS point with coordinates, altitude, and distance
+  - GPXElevationProfile: Parses GPX files and calculates distances
+  - ElevationPlotter: Creates graphical elevation profile charts
+  - ElevationProfileApp: Main entry point with command-line interface
+
+Quick Start:
+  1. ./compile.sh
+  2. ./run.sh sample_track.gpx
+
+Full Command:
+  java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp <gpx-file> [options]

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:geotracker="http://ilyabogdanovich.com/gpx/extensions/geotracker" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="Recorded in Geo Tracker for Android from Ilya Bogdanovich">
+  <metadata>
+    <name>Jan 11, 2026 15:04:45</name>
+    <author>
+      <name>Recorded in Geo Tracker for Android from Ilya Bogdanovich</name>
+      <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    </author>
+    <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    <time>2026-01-11T21:04:45Z</time>
+  </metadata>
+  <trk>
+    <name>Jan 11, 2026 15:04:45</name>
+    <src>Recorded in Geo Tracker for Android from Ilya Bogdanovich</src>
+    <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    <extensions>
+      <geotracker:meta>
+        <geotracker:length>78.76</geotracker:length>
+        <geotracker:duration>293286</geotracker:duration>
+        <geotracker:creationtime>2026-01-11T21:04:45Z</geotracker:creationtime>
+        <geotracker:activity>0</geotracker:activity>
+      </geotracker:meta>
+    </extensions>
+    <trkseg>
+      <trkpt lat="44.98086545" lon="-93.25905014">
+        <ele>222.35</ele>
+        <time>2026-01-11T21:04:51Z</time>
+      </trkpt>
+      <trkpt lat="44.9808329" lon="-93.25885028">
+        <ele>216.18</ele>
+        <time>2026-01-11T21:06:43Z</time>
+      </trkpt>
+      <trkpt lat="44.98074985" lon="-93.25879053">
+        <ele>214.16</ele>
+        <time>2026-01-11T21:06:56Z</time>
+      </trkpt>
+      <trkpt lat="44.98069182" lon="-93.25868245">
+        <ele>212.1</ele>
+        <time>2026-01-11T21:07:10Z</time>
+      </trkpt>
+      <trkpt lat="44.98064234" lon="-93.25857422">
+        <ele>214.19</ele>
+        <time>2026-01-11T21:07:25Z</time>
+      </trkpt>
+      <trkpt lat="44.98058931" lon="-93.25845694">
+        <ele>215.5</ele>
+        <time>2026-01-11T21:07:39Z</time>
+      </trkpt>
+      <trkpt lat="44.98055199" lon="-93.25833562">
+        <ele>214.73</ele>
+        <time>2026-01-11T21:07:52Z</time>
+      </trkpt>
+      <trkpt lat="44.98063478" lon="-93.25838823">
+        <ele>219.93</ele>
+        <time>2026-01-11T21:08:40Z</time>
+      </trkpt>
+      <trkpt lat="44.98052509" lon="-93.2582555">
+        <ele>222.32</ele>
+        <time>2026-01-11T21:09:04Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
