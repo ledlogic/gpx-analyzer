@@ -1,0 +1,188 @@
+Timestamp Display Feature
+=========================
+
+OVERVIEW
+--------
+Data points on elevation profiles now show timestamps in HH:MM format!
+
+This helps you understand:
+- When you reached specific points on your route
+- How long segments took
+- Where you stopped or slowed down
+- Time of day at different elevations
+
+
+HOW IT WORKS
+------------
+
+Automatic Display:
+- Timestamps appear next to data points on the plot
+- Format: HH:MM (24-hour format in your local timezone)
+- Smart spacing: Shows up to 20 timestamps to avoid overcrowding
+- First point: Green dot (start of journey)
+- Last point: Red dot (end of journey)
+- Other points: Blue dots with timestamps
+
+
+Visual Elements:
+┌────────────────────────────────────┐
+│  Elevation Profile: morning_hike   │
+│                                    │
+│   200m •─────────── 11:15         │
+│         ╱           ╲              │
+│   150m •             •──── 11:45  │
+│      ╱ 10:30          ╲            │
+│   100m ●──────────────●            │
+│      10:00 (start)    12:00 (end)  │
+│                                    │
+│   ● Start (green)                  │
+│   • Data points (blue) with time   │
+│   ● End (red)                      │
+└────────────────────────────────────┘
+
+
+EXAMPLE SCENARIOS
+-----------------
+
+Scenario 1: Morning Hike
+    Start: 08:30
+    Points: 08:45, 09:00, 09:15, 09:30
+    End: 09:45
+    
+    You can see:
+    - Entire hike took 1 hour 15 minutes
+    - Regular 15-minute intervals between points
+    - Steady progress
+
+Scenario 2: Lunch Break Visible
+    Points: 11:00, 11:15, 11:30 ... [gap] ... 13:00, 13:15
+    
+    You can see:
+    - Time gap indicates a stop (lunch break)
+    - Different pace before/after break
+
+Scenario 3: Summit Push
+    Points: 09:00, 09:20, 09:45, 10:15, 10:50
+    
+    You can see:
+    - Increasing time between points
+    - Slowing down as altitude increases
+    - Last segment took 35 minutes (steepest)
+
+
+TIMESTAMP SOURCES
+-----------------
+
+GPX files contain timestamps in two formats:
+
+1. Standard GPX:
+   <trkpt lat="45.5000" lon="-122.6750">
+     <ele>100.0</ele>
+     <time>2024-01-15T10:30:00Z</time>  ← Timestamp
+   </trkpt>
+
+2. If your GPX file has timestamps, they appear on the plot
+3. If no timestamps: plot shows without times (elevation only)
+
+
+BENEFITS
+--------
+
+✓ See your pace throughout the journey
+✓ Identify rest stops or delays
+✓ Understand time vs. distance relationship
+✓ Plan future trips based on timing
+✓ Verify GPS recording intervals
+
+
+SMART SPACING
+-------------
+
+The application automatically adjusts how many timestamps to show:
+
+Few Points (< 20):
+    Shows timestamp at every point
+    
+Many Points (> 20):
+    Shows ~20 evenly spaced timestamps
+    Always includes start and end
+    
+Why?
+    - Prevents text overlap
+    - Keeps plot readable
+    - Highlights key moments
+
+
+EXAMPLE USE CASES
+-----------------
+
+Use Case 1: Training Analysis
+    "I see I'm consistently slower after 2 hours"
+    → Timestamps show your pace decline
+    
+Use Case 2: Trip Planning
+    "This segment took 45 minutes last time"
+    → Use timestamps to plan your next trip
+    
+Use Case 3: Group Coordination
+    "We reached the viewpoint at 11:30"
+    → Share plot to show timing to others
+    
+Use Case 4: Photography Timing
+    "The best light was around 16:30"
+    → Timestamps help you remember golden hour
+
+
+TIMESTAMP FORMAT
+----------------
+
+Format: HH:MM (24-hour clock)
+Examples:
+    08:30 = 8:30 AM
+    14:45 = 2:45 PM
+    23:15 = 11:15 PM
+
+Timezone: Your local timezone
+    - Automatically converted from GPS UTC time
+    - Displays in your system's timezone
+
+
+COLOR CODING
+------------
+
+• Green dot = Start of journey
+• Blue dots = Regular data points
+• Red dot = End of journey
+
+This makes it easy to see at a glance:
+- Where you started
+- Key points along the way
+- Where you finished
+
+
+TECHNICAL DETAILS
+-----------------
+
+- Font: 9pt Arial (small, readable)
+- Background: Semi-transparent white for readability
+- Smart positioning: Above point, or below if near top
+- Max display: 20 timestamps (prevents clutter)
+- Interval calculation: Automatically spaced
+
+
+NOTES
+-----
+
+1. If your GPX file doesn't have timestamps:
+   - You'll still see the elevation profile
+   - No time labels will appear
+   - Distance markers still show
+
+2. Timestamps reflect GPS recording time:
+   - Not when you uploaded the file
+   - But when you actually hiked/biked/ran
+
+3. Timezone conversion is automatic:
+   - GPS records in UTC
+   - Display shows your local time
+   - No manual conversion needed!

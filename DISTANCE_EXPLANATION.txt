@@ -1,0 +1,66 @@
+Understanding the Distance Calculation
+=======================================
+
+This program plots CUMULATIVE PATH DISTANCE (s-distance), not straight-line distance.
+
+Example Scenario:
+----------------
+
+Imagine hiking from point A to B to C:
+
+    Start (A)
+      |
+      | 3km north
+      |
+      v
+    Point B
+      |
+      | 4km east
+      |
+      v-----> Point C (End)
+
+
+Two Different Distance Measurements:
+------------------------------------
+
+1. STRAIGHT-LINE DISTANCE (NOT used):
+   A → C directly = √(3² + 4²) = 5 km
+   
+   This would show you're 5km from start, but ignores the path taken.
+
+2. CUMULATIVE PATH DISTANCE (WHAT WE USE - s-distance):
+   A → B → C along path = 3km + 4km = 7 km
+   
+   This shows the actual distance traveled following the route.
+
+
+What the Graph Shows:
+---------------------
+
+X-axis: Cumulative distance traveled along the path (0, 1km, 2km, 3km, 4km, 5km, 6km, 7km)
+Y-axis: Altitude at each point
+
+The graph follows your ACTUAL JOURNEY, not your displacement from start.
+
+
+Real-World Example:
+------------------
+
+If you:
+1. Hike 5km up a mountain (going north)
+2. Hike 5km back down to your starting point (going south)
+
+Straight-line distance from start: 0 km (you're back where you started)
+Cumulative path distance: 10 km (the actual distance you hiked)
+
+Our graph will show 10km on the X-axis, showing your complete journey!
+
+
+Chronological Order:
+-------------------
+
+Points are plotted in the order they were recorded (by timestamp if available),
+so the graph shows your elevation profile as you traveled along the route over time.
+
+Time --> [Point 1] --> [Point 2] --> [Point 3] --> ... --> [Point N]
+         0 km         dist(1→2)     dist(1→2→3)         total distance

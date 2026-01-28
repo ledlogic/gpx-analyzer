@@ -1,7 +1,9 @@
 package com.github.ledlogic.gpxanalyzer;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -51,8 +53,7 @@ public class GPXElevationProfile {
         // Get all track points (trkpt elements)
         NodeList trkptList = doc.getElementsByTagName("trkpt");
         
-        double cumulativeDistance = 0;
-        TrackPoint previousPoint = null;
+        List<TrackPoint> unsortedPoints = new ArrayList<>();
         
         for (int i = 0; i < trkptList.getLength(); i++) {
             Element trkpt = (Element) trkptList.item(i);
@@ -68,8 +69,31 @@ public class GPXElevationProfile {
                 altitude = Double.parseDouble(eleList.item(0).getTextContent());
             }
             
-            TrackPoint point = new TrackPoint(lat, lon, altitude);
+            // Get timestamp from child element (if available)
+            Instant timestamp = null;
+            NodeList timeList = trkpt.getElementsByTagName("time");
+            if (timeList.getLength() > 0) {
+                try {
+                    String timeStr = timeList.item(0).getTextContent();
+                    timestamp = Instant.parse(timeStr);
+                } catch (Exception e) {
+                    // If timestamp parsing fails, continue without it
+                    System.err.println("Warning: Could not parse timestamp at index " + i);
+                }
+            }
             
+            TrackPoint point = new TrackPoint(lat, lon, altitude, timestamp);
+            unsortedPoints.add(point);
+        }
+        
+        // Sort points chronologically if timestamps are available
+        Collections.sort(unsortedPoints);
+        
+        // Now calculate cumulative distances on the sorted points
+        double cumulativeDistance = 0;
+        TrackPoint previousPoint = null;
+        
+        for (TrackPoint point : unsortedPoints) {
             // Calculate distance from previous point
             if (previousPoint != null) {
                 double distance = haversineDistance(
@@ -130,8 +154,16 @@ public class GPXElevationProfile {
         
         System.out.println("\n=== Track Statistics ===");
         System.out.printf("Total Points: %d%n", points.size());
-        System.out.printf("Total Distance: %.2f km (%.2f miles)%n", 
-                         totalDistance / 1000.0, totalDistance / 1609.34);
+        
+        // Display distance in meters if < 1km, otherwise in km
+        if (totalDistance < 1000) {
+            System.out.printf("Total Distance: %.2f m (%.2f ft)%n", 
+                             totalDistance, totalDistance * 3.28084);
+        } else {
+            System.out.printf("Total Distance: %.2f km (%.2f miles)%n", 
+                             totalDistance / 1000.0, totalDistance / 1609.34);
+        }
+        
         System.out.printf("Min Altitude: %.2f m (%.2f ft)%n", 
                          minAlt, minAlt * 3.28084);
         System.out.printf("Max Altitude: %.2f m (%.2f ft)%n", 

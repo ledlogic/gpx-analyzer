@@ -24,12 +24,17 @@ src/
 # Compile the project
 ./compile.sh
 
-# Run with sample data
+# Run with a single file (creates CSV and PNG in same directory)
 ./run.sh sample_track.gpx
 
-# Run with your own GPX file
-./run.sh your_track.gpx --csv output.csv
+# Process all GPX files in a directory (creates CSV and PNG for each)
+./run.sh ./gpx_tracks/
+
+# Batch mode - no GUI windows (faster for many files)
+./run.sh ./tracks/ --no-gui
 ```
+
+**Output**: CSV and PNG files are automatically saved in the same directory as the GPX files.
 
 ### Manual compilation and execution:
 
@@ -38,8 +43,14 @@ See the sections below for detailed compilation and usage instructions.
 ## Features
 
 - **GPX File Support**: Parses standard GPX files with track points
+- **Batch Processing**: Process single files or entire directories of GPX files
 - **Distance Calculation**: Uses Haversine formula for accurate horizontal distances
 - **Elevation Profile**: Plots altitude on Y-axis vs. cumulative distance on X-axis
+- **Timestamp Display**: Shows time (HH:MM) at each data point when available
+- **Smart Unit Display**: Automatically shows meters for tracks < 1km, kilometers for longer tracks
+- **Chronological Ordering**: Sorts points by timestamp to ensure proper sequence
+- **Dynamic Titles**: Each plot displays the filename as its title
+- **PNG Export**: Save plots as high-quality PNG images
 - **Data Export**: Export data to CSV for use in spreadsheet applications
 - **Graphical Display**: Built-in Java Swing visualization
 - **Statistics**: Displays track statistics (total distance, elevation range, etc.)
@@ -53,7 +64,8 @@ See the sections below for detailed compilation and usage instructions.
 - `ElevationProfileApp.java` - Main application
 
 **Sample Data**:
-- `sample_track.gpx` - Sample GPX file for testing
+- `sample_track.gpx` - Sample GPX file for testing (longer track, displays in km)
+- `short_track.gpx` - Short track for testing meter display (< 1km)
 
 **Helper Scripts** (Linux/Mac):
 - `compile.sh` - Compiles the project
@@ -80,40 +92,94 @@ This will create the compiled `.class` files in the `bin/` directory with the pr
 
 ## Usage
 
-### Basic Usage (with GUI)
+### Single File Processing
 
 ```bash
 java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp sample_track.gpx
 ```
 
+**Output** (automatically created in same directory):
+- `sample_track.csv` - Data file
+- `sample_track.png` - Plot image
+- GUI window showing the plot
+
+### Directory Processing (Batch Mode)
+
+Process all GPX files in a directory:
+
+```bash
+java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp ./gpx_tracks/
+```
+
 This will:
-1. Parse the GPX file
-2. Calculate distances and extract altitudes
-3. Display statistics in the console
-4. Show a graphical elevation profile
+1. Find all `.gpx` files in the directory
+2. Parse each file and calculate distances/altitudes
+3. Save CSV and PNG for each file in the same directory
+4. Display statistics for each file in the console
+5. Show a separate plot window for each file (with filename as title)
 
-### Export to CSV
-
-```bash
-java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp sample_track.gpx --csv output.csv
+**Example output structure:**
+```
+gpx_tracks/
+├── morning_run.gpx
+├── morning_run.csv      ← automatically created
+├── morning_run.png      ← automatically created
+├── afternoon_hike.gpx
+├── afternoon_hike.csv   ← automatically created
+└── afternoon_hike.png   ← automatically created
 ```
 
-### Console-Only Mode (No GUI)
+### Batch Mode (No GUI - Faster)
+
+Process files without displaying plots:
 
 ```bash
-java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp sample_track.gpx --no-gui --csv output.csv
+java -cp bin com.github.ledlogic.gpxanalyzer.ElevationProfileApp ./tracks/ --no-gui
 ```
+
+Perfect for:
+- Processing many files quickly
+- Server environments without displays
+- Automated workflows
+- Creating archives
+
+Still creates all CSV and PNG files automatically!
+
+## Output Files
+
+The application automatically creates two output files for each GPX file in the **same directory** as the input:
+
+### CSV File
+- **Filename**: Same as GPX file with `.csv` extension
+- **Content**: Distance (m & km), Altitude (m & ft) for each point
+- **Use**: Data analysis, spreadsheets, further processing
+
+### PNG File
+- **Filename**: Same as GPX file with `.png` extension
+- **Size**: 1000×600 pixels
+- **Quality**: High-quality with antialiasing
+- **Content**: Elevation profile plot with title, axes, and labels
+- **Use**: Reports, presentations, websites, sharing
+
+### Example
+Input: `mountain_hike.gpx` in `/tracks/`
+
+Output:
+- `/tracks/mountain_hike.csv` - Data file
+- `/tracks/mountain_hike.png` - Plot image
+
+**Benefits**:
+- ✅ No need to specify output directories
+- ✅ Files stay organized with their source data
+- ✅ Easy to find - same location as GPX files
+- ✅ Matching names make relationships clear
 
 ### Using Just the Parser
 
+For single file parsing:
+
 ```bash
 java -cp bin com.github.ledlogic.gpxanalyzer.GPXElevationProfile sample_track.gpx
-```
-
-or with custom CSV output:
-
-```bash
-java -cp bin com.github.ledlogic.gpxanalyzer.GPXElevationProfile sample_track.gpx my_output.csv
 ```
 
 ## Data Structure
@@ -123,8 +189,9 @@ Each track point contains:
 - **latitude**: GPS latitude
 - **longitude**: GPS longitude  
 - **altitude**: Elevation in meters
-- **distanceFromStart**: Cumulative horizontal distance from start (meters)
+- **distanceFromStart**: Cumulative horizontal distance from start (meters) - this is the s-distance along the path
 - **distanceFromPrevious**: Distance from previous point (meters)
+- **timestamp**: Time of the GPS recording (optional, used for chronological sorting)
 
 ## CSV Output Format
 
@@ -179,6 +246,44 @@ Where:
 - Δlon = difference in longitude
 
 This provides accurate horizontal distances regardless of elevation changes.
+
+### Important: S-Distance Curve (Path Distance)
+
+The X-axis represents the **cumulative distance traveled along the path** (s-distance curve), NOT the straight-line distance from the start point. This means:
+
+1. **Sequential summation**: Distance from point A → B → C is the sum of distances A→B and B→C
+2. **Path following**: The graph shows the actual route taken, including turns and curves
+3. **Chronological order**: Points are plotted in chronological order based on timestamps (if available in the GPX file)
+
+**Example**: If you hike 5km north, then 5km south back to your starting point, the graph will show 10km total distance, not 0km.
+
+## Unit Display
+
+The application automatically selects appropriate units based on track length:
+
+- **Short tracks (< 1km)**: Distance displayed in **meters** (e.g., "250.00 m", "750.50 m")
+- **Longer tracks (≥ 1km)**: Distance displayed in **kilometers** (e.g., "1.50 km", "5.25 km")
+
+This ensures optimal readability regardless of track length. The axis title also updates accordingly ("Distance (meters)" vs "Distance (kilometers)").
+
+All axis labels display values with 2 decimal places for precision.
+
+## Timestamp Visualization
+
+When GPX files contain timestamp data, the plot displays:
+
+- **Time labels** (HH:MM format) next to each data point
+- **Green dot** at the start point
+- **Blue dots** at intermediate points
+- **Red dot** at the end point
+
+This helps you:
+- See when you reached specific points
+- Understand your pace throughout the journey
+- Identify rest stops or delays
+- Plan future trips based on timing
+
+Timestamps are automatically converted to your local timezone and displayed in 24-hour format.
 
 ## Example Output
 
